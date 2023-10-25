@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(human_tracker LANGUAGES CXX CUDA)
+
+set(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules/ ${CMAKE_SOURCE_DIR}/cmake/ )
+
+include(setup)
+
+include(dependencies)
+
+set(HTRAC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+set(CMAKE_LINK_WHAT_YOU_USE TRUE)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+
+include_directories(${HTRAC_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} src/3rdparty)
+
+#add_subdirectory(pybind11)
+#pybind11_add_module(htrac src/openpose/sandbox/test_openpose.cpp)
+
+add_subdirectory(src)
+
+
