@@ -29,6 +29,7 @@ void show(const std::shared_ptr<CameraReader> &reader, const std::shared_ptr<rcl
             break;
 
         rclcpp::spin_some(node);
+
         loopRate.sleep();
     }
 }
@@ -38,12 +39,14 @@ int main(int argc, char *argv[]) {
     rclcpp::init(argc, argv);
     auto node = rclcpp::Node::make_shared("camera_tester");
 
-    node->declare_parameter("ff", rclcpp::PARAMETER_INTEGER);
+    node->declare_parameter("rgb", "/camera/color/image_raw");
+    node->declare_parameter("depth", "/camera/aligned_depth_to_color/image_raw") ;
+    node->declare_parameter("info", "/camera/color/camera_info") ;
 
 
-    const std::string colorTopic = "/camera/color/image_raw";
-    const std::string camInfoTopic = "/camera/color/camera_info";
-    const std::string depthTopic = "/camera/aligned_depth_to_color/image_raw";
+    const std::string colorTopic = node->get_parameter("rgb").as_string();
+    const std::string camInfoTopic = node->get_parameter("info").as_string();
+    const std::string depthTopic = node->get_parameter("depth").as_string();
     auto camera_reader = std::make_shared<CameraReader>(node, colorTopic, depthTopic, camInfoTopic) ;
 
 
