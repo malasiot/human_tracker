@@ -46,27 +46,38 @@ add_library(htrac_pose SHARED ${HTRAC_POSE_SRC})
 set_target_properties(htrac_pose PROPERTIES
                             CUDA_SEPARABLE_COMPILATION ON)
 
-#target_compile_options(htrac_pose PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-#                                               -g -G
-#                                               --generate-line-info
-#                                               --use_fast_math
-#                                               --relocatable-device-code=true
-#                                               >)
-
+target_compile_options(htrac_pose PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
+                            --expt-relaxed-constexpr
+                            --extended-lambda
+                            >)
 
 target_link_libraries(htrac_pose "${TORCH_LIBRARIES}" ${OpenCV_LIBS}  cvx ceres assimp OpenMP::OpenMP_CXX
     ${NPPIF_LIBRARY} ${NPPC_LIBRARY}
     openpose gflags)
 
 
-add_executable(test_fit2 tracking/sandbox/test_fit2.cpp)
-target_link_libraries(test_fit2 htrac_pose xviz)
+#add_executable(test_fit2 tracking/sandbox/test_fit2.cpp)
+#target_link_libraries(test_fit2 htrac_pose xviz)
 
 add_definitions(-DUSE_CUDNN)
 add_executable(test_openpose openpose/sandbox/test_openpose.cpp)
 target_link_libraries(test_openpose PRIVATE htrac_pose
 #    pybind11::embed
 )
+
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+
+add_executable(test_camera_reader ros/test_camera_reader.cpp ros/camera_reader.cpp)
+
+ament_target_dependencies(test_camera_reader rclcpp sensor_msgs std_msgs cv_bridge)
+target_link_libraries(test_camera_reader htrac_pose cvx)
+
+install(TARGETS
+  test_camera_reader
+  DESTINATION lib/${PROJECT_NAME})
 
 
 
