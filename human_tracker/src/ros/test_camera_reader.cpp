@@ -1,4 +1,4 @@
-#include <htrac/ros/camera_reader.hpp>
+#include <human_tracker/camera_reader.hpp>
 
 #include <iostream>
 #include <opencv2/highgui/highgui.hpp>

@@ -1,4 +1,4 @@
-#include <htrac/ros/camera_reader.hpp>
+#include <human_tracker/camera_reader.hpp>
 using std::placeholders::_1, std::placeholders::_2, std::placeholders::_3;
 
 CameraReader::CameraReader(rclcpp::Node::SharedPtr nh, const std::string& colorTopic, const std::string& depthTopic,
