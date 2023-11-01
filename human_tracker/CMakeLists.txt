@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(ros_human_tracker LANGUAGES CXX CUDA)
+project(human_tracker LANGUAGES CXX CUDA)
 
 
 set(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules/ ${CMAKE_SOURCE_DIR}/cmake/ )

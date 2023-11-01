@@ -73,7 +73,7 @@ find_package(message_filters REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(image_geometry REQUIRED)
-find_package(human_tracker_interfaces REQUIRED)
+find_package(human_tracker_msgs REQUIRED)
 
 add_executable(test_camera_reader ros/test_camera_reader.cpp ros/camera_reader.cpp)
 ament_target_dependencies(test_camera_reader rclcpp sensor_msgs std_msgs cv_bridge message_filters)
@@ -89,7 +89,7 @@ ament_target_dependencies(openpose_tracker
     visualization_msgs
     tf2_eigen
     image_geometry
-    human_tracker_interfaces)
+    human_tracker_msgs)
 
 target_link_libraries(openpose_tracker htrac_pose cvx)
 

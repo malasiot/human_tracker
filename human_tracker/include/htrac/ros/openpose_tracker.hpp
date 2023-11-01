@@ -10,7 +10,7 @@
 #include "message_filters/synchronizer.h"
 #include "message_filters/sync_policies/approximate_time.h"
 #include "message_filters/subscriber.h"
-#include "human_tracker_interfaces/msg/frame.hpp"
+#include "human_tracker_msgs/msg/frame.hpp"
 #include "visualization_msgs/msg/marker_array.hpp"
 
 #include <sensor_msgs/point_cloud2_iterator.hpp>
@@ -33,7 +33,7 @@ private:
     rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr caminfo_sub_;
     message_filters::Subscriber<sensor_msgs::msg::Image> rgb_sub_ ;
     message_filters::Subscriber<sensor_msgs::msg::Image> depth_sub_ ;
-    rclcpp::Publisher<human_tracker_interfaces::msg::Frame>::SharedPtr publisher_;
+    rclcpp::Publisher<human_tracker_msgs::msg::Frame>::SharedPtr publisher_;
     rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_publisher_;
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_point_cloud_;
 

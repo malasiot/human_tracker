@@ -47,7 +47,7 @@ inline void OpenPoseTracker::subscribe() {
     sync_.reset(new Synchronizer( SyncPolicy(10), rgb_sub_, depth_sub_ ));
     sync_->registerCallback(std::bind(&OpenPoseTracker::frameCallback,this,_1, _2));
 
-    publisher_ = create_publisher<human_tracker_interfaces::msg::Frame>("frame", 10);
+    publisher_ = create_publisher<human_tracker_msgs::msg::Frame>("frame", 10);
 
     marker_publisher_ = create_publisher<visualization_msgs::msg::MarkerArray>("skeleton", 10);
 
@@ -177,13 +177,13 @@ void OpenPoseTracker::frameCallback(const sensor_msgs::msg::Image::ConstSharedPt
 
         auto kpts3 = getKeyPoints3d(kpts, cam, depth_) ;
 
-        human_tracker_interfaces::msg::Frame frame ;
+        human_tracker_msgs::msg::Frame frame ;
         frame.header.stamp = now() ;
 
         visualization_msgs::msg::MarkerArray markers = makeVizMarker(kpts3) ;
 
         for( const auto &kp: kpts3 ) {
-            human_tracker_interfaces::msg::Joint joint ;
+            human_tracker_msgs::msg::Joint joint ;
             joint.point.x = kp.second.first.x() ;
             joint.point.y = kp.second.first.y() ;
             joint.point.z = kp.second.first.z() ;
