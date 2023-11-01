@@ -69,14 +69,33 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
+find_package(message_filters REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(tf2_eigen REQUIRED)
+find_package(image_geometry REQUIRED)
+find_package(human_tracker_interfaces REQUIRED)
 
 add_executable(test_camera_reader ros/test_camera_reader.cpp ros/camera_reader.cpp)
-
-ament_target_dependencies(test_camera_reader rclcpp sensor_msgs std_msgs cv_bridge)
+ament_target_dependencies(test_camera_reader rclcpp sensor_msgs std_msgs cv_bridge message_filters)
 target_link_libraries(test_camera_reader htrac_pose cvx)
+
+add_executable(openpose_tracker ros/openpose_tracker.cpp)
+ament_target_dependencies(openpose_tracker
+    rclcpp
+    sensor_msgs
+    std_msgs
+    cv_bridge
+    message_filters
+    visualization_msgs
+    tf2_eigen
+    image_geometry
+    human_tracker_interfaces)
+
+target_link_libraries(openpose_tracker htrac_pose cvx)
 
 install(TARGETS
   test_camera_reader
+  openpose_tracker
   DESTINATION lib/${PROJECT_NAME})
 
 

@@ -7,6 +7,9 @@
 #include "sensor_msgs/msg/camera_info.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "cv_bridge/cv_bridge.h"
+#include "message_filters/synchronizer.h"
+#include "message_filters/sync_policies/approximate_time.h"
+#include "message_filters/subscriber.h"
 
 #include <opencv2/core/core.hpp>
 
@@ -27,8 +30,12 @@ private:
     std::mutex mutex_ ;
     rclcpp::Node::SharedPtr node_handle_;
     rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr caminfo_sub_;
-    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr rgb_sub_ ;
-    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr depth_sub_ ;
+    message_filters::Subscriber<sensor_msgs::msg::Image> rgb_sub_ ;
+    message_filters::Subscriber<sensor_msgs::msg::Image> depth_sub_ ;
+
+    using SyncPolicy =  typename message_filters::sync_policies::ApproximateTime<sensor_msgs::msg::Image, sensor_msgs::msg::Image> ;
+    using Synchronizer = message_filters::Synchronizer<SyncPolicy> ;
+    std::unique_ptr<Synchronizer> sync_ ;
 
     ullong mFrameNumber = 0ULL;
 
@@ -37,8 +44,10 @@ private:
 
     inline void subscribe();
     void camInfoCallback(const sensor_msgs::msg::CameraInfo::SharedPtr camMsg);
-    void colorImgCallback(const sensor_msgs::msg::Image::SharedPtr colorMsg);
-    void depthImgCallback(const sensor_msgs::msg::Image::SharedPtr depthMsg);
+    //void colorImgCallback(const sensor_msgs::msg::Image::SharedPtr colorMsg);
+    //void depthImgCallback(const sensor_msgs::msg::Image::SharedPtr depthMsg);
+
+    void frameCallback(const sensor_msgs::msg::Image::ConstSharedPtr colorMsg, const sensor_msgs::msg::Image::ConstSharedPtr depthMsg) ;
 
 public:
     // we don't want to instantiate using deafult constructor
