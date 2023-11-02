@@ -37,6 +37,7 @@ jobs:
           name: Test
           command : |
             source /opt/ros/<< pipeline.parameters.ros-distro >>/setup.bash
+            cd ros_ws/
             colcon test
             colcon test-result --verbose
 
