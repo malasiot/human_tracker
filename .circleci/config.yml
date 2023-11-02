@@ -21,7 +21,7 @@ jobs:
             cd ros_ws/
             colcon build
       - persist_to_workspace:
-          root: .
+          root: "ros_ws/"
           paths:
             - build
             - install
@@ -32,7 +32,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .
+          at: "ros_ws/"
       - run:
           name: Test
           command : |
@@ -55,7 +55,7 @@ jobs:
           command: pip install cpplint
       - run:
           name: Run cpplint
-          command: cpplint --recursive src || (echo "Please make sure the pre-commit hooks are installed correctly and cpplint is installed locally. This will ensure linting errors are resolved before committing" && exit 1)
+          command: cpplint --recursive "ros_ws/src" || (echo "Please make sure the pre-commit hooks are installed correctly and cpplint is installed locally. This will ensure linting errors are resolved before committing" && exit 1)
   
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
