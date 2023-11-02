@@ -1,0 +1,76 @@
+version: 2.1
+
+parameters:
+  ros-distro:
+    type: string
+    default: "humble"
+
+jobs:
+  build:
+    docker:
+      - image: malasiot/sestosenso-certh-human-tracker:latest
+    steps:
+      - checkout:
+	   path: ros_ws/src
+      - run:
+          name: "Update"
+          command: sudo apt update
+      - run:
+          name: Install dependencies
+          command: |
+            source /opt/ros/<< pipeline.parameters.ros-distro >>/setup.bash
+            rosdep update
+            rosdep install --from-paths src -y --ignore-src
+      - run:
+          name: Build
+          command: |
+            source /opt/ros/<< pipeline.parameters.ros-distro >>/setup.bash
+            cd ros_ws/
+            colcon build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
+            - install
+
+  test:
+    docker:
+      - image: ros:<< pipeline.parameters.ros-distro >>-ros-base
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command : |
+            source /opt/ros/<< pipeline.parameters.ros-distro >>/setup.bash
+            colcon test
+            colcon test-result --verbose
+
+  lint:
+    docker:
+      - image: cimg/base:current-22.04
+    steps:
+      - checkout
+      - run:
+          name: Install pip
+          command: |
+            sudo apt update
+            sudo apt install python3-pip
+      - run:
+          name: Install cpplint
+          command: pip install cpplint
+      - run:
+          name: Run cpplint
+          command: cpplint --recursive src || (echo "Please make sure the pre-commit hooks are installed correctly and cpplint is installed locally. This will ensure linting errors are resolved before committing" && exit 1)
+  
+# Orchestrate jobs using workflows
+# See: https://circleci.com/docs/configuration-reference/#workflows
+workflows:
+  build_test_lint:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - lint
