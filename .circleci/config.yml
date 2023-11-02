@@ -13,15 +13,6 @@ jobs:
       - checkout:
           path: "ros_ws/src"
       - run:
-          name: "Update"
-          command: sudo apt update
-      - run:
-          name: Install dependencies
-          command: |
-            source /opt/ros/<< pipeline.parameters.ros-distro >>/setup.bash
-            rosdep update
-            rosdep install --from-paths src -y --ignore-src
-      - run:
           name: Build
           command: |
             source /opt/ros/<< pipeline.parameters.ros-distro >>/setup.bash
