@@ -11,7 +11,7 @@ jobs:
       - image: malasiot/sestosenso-certh-human-tracker:latest
     steps:
       - checkout:
-	   path: ros_ws/src
+          path: "ros_ws/src"
       - run:
           name: "Update"
           command: sudo apt update
